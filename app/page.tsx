@@ -24,7 +24,10 @@ import {
   Box,
   Layers,
   Calculator,
+  Smile,
+  Search,
 } from "lucide-react";
+import { ColorPicker } from "@/components/ui/ColorPicker";
 
 const iconOptions = [
   { name: "link", icon: Link, label: "Link" },
@@ -48,13 +51,17 @@ const iconOptions = [
 const themeOptions = [
   { name: "magenta", color: "#ff00ff", label: "Magenta" },
   { name: "cyan", color: "#00ffff", label: "Cyan" },
+  { name: "roxi", color: "#750834", label: "Roxi" },
 ];
 
 export default function Home() {
   const [title, setTitle] = useState("LINK SHORTENER");
   const [subtitle, setSubtitle] = useState("s.pcstyle.dev");
   const [selectedIcon, setSelectedIcon] = useState("link");
+  const [customIcon, setCustomIcon] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("magenta");
+  const [customColor, setCustomColor] = useState("#ff00ff");
+  const [emoji, setEmoji] = useState("");
   const [copied, setCopied] = useState(false);
   const [key, setKey] = useState(0);
   const [baseUrl, setBaseUrl] = useState("https://og.pcstyle.dev");
@@ -69,11 +76,13 @@ export default function Home() {
     const params = new URLSearchParams({
       title,
       subtitle,
-      icon: selectedIcon,
+      icon: customIcon || selectedIcon,
       theme: selectedTheme,
+      color: selectedTheme === "custom" ? customColor : "",
+      emoji: emoji,
     });
     return `/api/og?${params.toString()}`;
-  }, [title, subtitle, selectedIcon, selectedTheme]);
+  }, [title, subtitle, selectedIcon, customIcon, selectedTheme, customColor, emoji]);
 
   const fullUrl = `${baseUrl}${generateUrl()}`;
 
@@ -152,6 +161,23 @@ export default function Home() {
                 />
               </div>
 
+              {/* Emoji Input */}
+              <div className="space-y-2">
+                <label className="text-xs text-gray-500 uppercase tracking-wider">
+                  EMOJI_OVERLAY
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={emoji}
+                    onChange={(e) => setEmoji(e.target.value.slice(0, 2))}
+                    className="w-full p-4 bg-black border border-[#ff00ff]/30 rounded-lg text-white placeholder-gray-600 outline-none focus:border-[#ff00ff] focus:shadow-[0_0_20px_#ff00ff44] transition-all"
+                    placeholder="Enter emoji (e.g. 🚀)"
+                  />
+                  <Smile className="absolute right-4 top-4 w-5 h-5 text-[#ff00ff]/50" />
+                </div>
+              </div>
+
               {/* Icon Selector */}
               <div className="space-y-2">
                 <label className="text-xs text-gray-500 uppercase tracking-wider">
@@ -176,6 +202,16 @@ export default function Home() {
                     );
                   })}
                 </div>
+                <div className="relative mt-2">
+                  <input
+                    type="text"
+                    value={customIcon}
+                    onChange={(e) => setCustomIcon(e.target.value)}
+                    className="w-full p-3 bg-black border border-[#ff00ff]/20 rounded-lg text-xs text-white placeholder-gray-700 outline-none focus:border-[#ff00ff] transition-all"
+                    placeholder="Or enter Lucide icon name (e.g. 'activity')..."
+                  />
+                  <Search className="absolute right-3 top-3 w-4 h-4 text-[#ff00ff]/30" />
+                </div>
               </div>
 
               {/* Theme Selector */}
@@ -183,42 +219,70 @@ export default function Home() {
                 <label className="text-xs text-gray-500 uppercase tracking-wider">
                   THEME
                 </label>
-                <div className="flex gap-3">
-                  {themeOptions.map((option) => {
-                    const isSelected = selectedTheme === option.name;
-                    return (
-                      <button
-                        key={option.name}
-                        onClick={() => setSelectedTheme(option.name)}
-                        className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${isSelected
-                          ? "border-current bg-opacity-10"
-                          : "border-gray-800 hover:border-gray-600"
-                          }`}
-                        style={{
-                          borderColor: isSelected ? option.color : undefined,
-                          backgroundColor: isSelected
-                            ? `${option.color}11`
-                            : undefined,
-                        }}
-                      >
-                        <div
-                          className="w-4 h-4 rounded-full"
+                <div className="space-y-4">
+                  <div className="flex gap-3">
+                    {themeOptions.map((option) => {
+                      const isSelected = selectedTheme === option.name;
+                      return (
+                        <button
+                          key={option.name}
+                          onClick={() => setSelectedTheme(option.name)}
+                          className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${isSelected
+                            ? "border-current bg-opacity-10"
+                            : "border-gray-800 hover:border-gray-600"
+                            }`}
                           style={{
-                            backgroundColor: option.color,
-                            boxShadow: isSelected
-                              ? `0 0 10px ${option.color}`
+                            borderColor: isSelected ? option.color : undefined,
+                            backgroundColor: isSelected
+                              ? `${option.color}11`
                               : undefined,
                           }}
-                        />
-                        <span
-                          style={{ color: isSelected ? option.color : "#888" }}
-                          className="text-sm uppercase tracking-wider"
                         >
-                          {option.label}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <div
+                            className="w-4 h-4 rounded-full"
+                            style={{
+                              backgroundColor: option.color,
+                              boxShadow: isSelected
+                                ? `0 0 10px ${option.color}`
+                                : undefined,
+                            }}
+                          />
+                          <span
+                            style={{ color: isSelected ? option.color : "#888" }}
+                            className="text-sm uppercase tracking-wider"
+                          >
+                            {option.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                    <button
+                      onClick={() => setSelectedTheme("custom")}
+                      className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${selectedTheme === "custom"
+                        ? "border-[#ff00ff] bg-[#ff00ff]/10"
+                        : "border-gray-800 hover:border-gray-600"
+                        }`}
+                    >
+                      <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-magenta-500 to-cyan-500" />
+                      <span className={`text-sm uppercase tracking-wider ${selectedTheme === "custom" ? "text-white" : "text-gray-500"}`}>
+                        CUSTOM
+                      </span>
+                    </button>
+                  </div>
+
+                  {selectedTheme === "custom" && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      className="pt-2"
+                    >
+                      <ColorPicker
+                        label="PROTOCOL_CUSTOM_COLOR"
+                        value={customColor}
+                        onChange={setCustomColor}
+                      />
+                    </motion.div>
+                  )}
                 </div>
               </div>
 
