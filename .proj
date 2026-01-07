@@ -1,0 +1,16 @@
+{
+  "id": "og",
+  "name": "OG Image Generator",
+  "desc": "dynamic open graph image generator with cyberpunk aesthetics",
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "@vercel/og"
+  ],
+  "status": "active",
+  "icon": "Image",
+  "github": "https://github.com/pc-style/og.git",
+  "link": "https://og.pcstyle.dev"
+}

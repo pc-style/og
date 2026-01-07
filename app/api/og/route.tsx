@@ -21,6 +21,7 @@ const icons: Record<string, string> = {
     box: "M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z M3.3 7l8.7 5 8.7-5 M12 22V12",
     layers: "m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z M22 12.65l-8.58 3.9a2 2 0 0 1-1.66 0L3.18 12.65 M22 17.65l-8.58 3.9a2 2 0 0 1-1.66 0L3.18 17.65",
     calculator: "M4 2h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM6 6h12M6 12h2M6 18h2M12 12h2M12 18h2M18 12h2M18 18h2",
+    image: "M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.5 10a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM21 15l-5-5L5 21",
 };
 
 export async function GET(request: NextRequest) {
@@ -30,7 +31,6 @@ export async function GET(request: NextRequest) {
     const title = searchParams.get("title") || "PCSTYLE";
     const subtitle = searchParams.get("subtitle") || "pcstyle.dev";
     const iconName = searchParams.get("icon") || "code";
-    const template = searchParams.get("template") || "default";
     const theme = searchParams.get("theme") || "magenta";
 
     // Theme colors
@@ -39,13 +39,9 @@ export async function GET(request: NextRequest) {
         cyan: { primary: "#00ffff", glow: "rgba(0, 255, 255, 0.4)" },
     };
 
-    const colors = themeColors[theme as keyof typeof themeColors] || themeColors.magenta;
+    const colors =
+        themeColors[theme as keyof typeof themeColors] || themeColors.magenta;
     const iconPath = icons[iconName] || icons.code;
-
-    // Load font
-    const fontData = await fetch(
-        new URL("https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff")
-    ).then((res) => res.arrayBuffer());
 
     return new ImageResponse(
         (
@@ -58,7 +54,7 @@ export async function GET(request: NextRequest) {
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: "#000000",
-                    fontFamily: "JetBrains Mono",
+                    fontFamily: "monospace",
                     position: "relative",
                 }}
             >
@@ -70,14 +66,9 @@ export async function GET(request: NextRequest) {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        opacity: 0.05,
-                        backgroundImage: `repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 20px,
-              ${colors.primary}22 20px,
-              ${colors.primary}22 21px
-            )`,
+                        opacity: 0.08,
+                        display: "flex",
+                        backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 20px, ${colors.primary}33 20px, ${colors.primary}33 21px)`,
                     }}
                 />
 
@@ -114,7 +105,7 @@ export async function GET(request: NextRequest) {
                             justifyContent: "center",
                             width: 120,
                             height: 120,
-                            borderRadius: "50%",
+                            borderRadius: 60,
                             border: `3px solid ${colors.primary}`,
                             boxShadow: `0 0 40px ${colors.glow}`,
                             backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -129,9 +120,6 @@ export async function GET(request: NextRequest) {
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            style={{
-                                filter: `drop-shadow(0 0 10px ${colors.primary})`,
-                            }}
                         >
                             <path d={iconPath} />
                         </svg>
@@ -140,14 +128,15 @@ export async function GET(request: NextRequest) {
                     {/* Title */}
                     <div
                         style={{
-                            fontSize: 72,
+                            fontSize: 64,
                             fontWeight: 800,
                             color: "#ffffff",
                             textTransform: "uppercase",
-                            letterSpacing: "0.1em",
+                            letterSpacing: "0.05em",
                             textShadow: `0 0 20px ${colors.glow}`,
                             textAlign: "center",
                             maxWidth: 1000,
+                            display: "flex",
                         }}
                     >
                         {title}
@@ -156,11 +145,12 @@ export async function GET(request: NextRequest) {
                     {/* Subtitle */}
                     <div
                         style={{
-                            fontSize: 28,
+                            fontSize: 24,
                             color: colors.primary,
                             fontWeight: 400,
-                            letterSpacing: "0.2em",
+                            letterSpacing: "0.15em",
                             textShadow: `0 0 10px ${colors.glow}`,
+                            display: "flex",
                         }}
                     >
                         {subtitle}
@@ -174,14 +164,13 @@ export async function GET(request: NextRequest) {
                         bottom: 40,
                         right: 50,
                         fontSize: 18,
-                        color: "#333",
                         fontWeight: 700,
-                        letterSpacing: "0.3em",
+                        letterSpacing: "0.2em",
                         display: "flex",
                     }}
                 >
                     <span style={{ color: colors.primary }}>pc</span>
-                    <span>style</span>
+                    <span style={{ color: "#444" }}>style</span>
                 </div>
 
                 {/* Scanlines overlay */}
@@ -192,13 +181,7 @@ export async function GET(request: NextRequest) {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundImage: `repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgba(0, 0, 0, 0.1) 2px,
-              rgba(0, 0, 0, 0.1) 4px
-            )`,
+                        backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px)`,
                         pointerEvents: "none",
                         display: "flex",
                     }}
@@ -208,16 +191,8 @@ export async function GET(request: NextRequest) {
         {
             width: 1200,
             height: 630,
-            fonts: [
-                {
-                    name: "JetBrains Mono",
-                    data: fontData,
-                    style: "normal",
-                    weight: 700,
-                },
-            ],
             headers: {
-                "Cache-Control": "public, immutable, max-age=31536000",
+                "Cache-Control": "public, max-age=3600, s-maxage=86400",
             },
         }
     );
