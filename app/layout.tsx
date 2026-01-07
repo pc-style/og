@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { NeuralCursor } from "@/components/ui/NeuralCursor";
+import { CRTOverlay } from "@/components/ui/CRTOverlay";
+import { MatrixBackground } from "@/components/ui/MatrixBackground";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-geist-mono",
@@ -23,8 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${jetbrainsMono.variable} antialiased bg-black`}>
-        {children}
+      <body className={`${jetbrainsMono.variable} font-mono antialiased bg-black overflow-x-hidden`}>
+        <MatrixBackground />
+        <CRTOverlay />
+        <div className="relative z-10">{children}</div>
+        <NeuralCursor />
       </body>
     </html>
   );
