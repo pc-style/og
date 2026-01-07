@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
+// Using Node.js runtime as it's often more stable for ImageResponse in newer Next.js versions
+export const runtime = "nodejs";
 
 // Icon SVG paths (subset of Lucide icons)
 const icons: Record<string, string> = {
@@ -25,177 +26,171 @@ const icons: Record<string, string> = {
 };
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = request.nextUrl;
+    try {
+        const { searchParams } = new URL(request.url);
 
-    // Get params with defaults
-    const title = searchParams.get("title") || "PCSTYLE";
-    const subtitle = searchParams.get("subtitle") || "pcstyle.dev";
-    const iconName = searchParams.get("icon") || "code";
-    const theme = searchParams.get("theme") || "magenta";
+        // Get params with defaults
+        const title = searchParams.get("title") || "PCSTYLE";
+        const subtitle = searchParams.get("subtitle") || "pcstyle.dev";
+        const iconName = searchParams.get("icon") || "code";
+        const theme = searchParams.get("theme") || "magenta";
 
-    // Theme colors
-    const themeColors = {
-        magenta: { primary: "#ff00ff", glow: "rgba(255, 0, 255, 0.4)" },
-        cyan: { primary: "#00ffff", glow: "rgba(0, 255, 255, 0.4)" },
-    };
+        // Theme colors - using safe RGB/Hex values
+        const themeColors = {
+            magenta: { primary: "#ff00ff", secondary: "rgba(255, 0, 255, 0.2)" },
+            cyan: { primary: "#00ffff", secondary: "rgba(0, 255, 255, 0.2)" },
+        };
 
-    const colors =
-        themeColors[theme as keyof typeof themeColors] || themeColors.magenta;
-    const iconPath = icons[iconName] || icons.code;
+        const colors = themeColors[theme as keyof typeof themeColors] || themeColors.magenta;
+        const iconPath = icons[iconName] || icons.code;
 
-    return new ImageResponse(
-        (
-            <div
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "#000000",
-                    fontFamily: "monospace",
-                    position: "relative",
-                }}
-            >
-                {/* Matrix pattern background */}
+        return new ImageResponse(
+            (
                 <div
                     style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: 0.08,
-                        display: "flex",
-                        backgroundImage: `linear-gradient(to bottom, ${colors.primary}33 1px, transparent 1px)`,
-                        backgroundSize: "100% 20px",
-                    }}
-                />
-
-                {/* Border with glow */}
-                <div
-                    style={{
-                        position: "absolute",
-                        top: 20,
-                        left: 20,
-                        right: 20,
-                        bottom: 20,
-                        border: `2px solid ${colors.primary}`,
-                        boxShadow: `0 0 30px ${colors.glow}`,
-                        display: "flex",
-                    }}
-                />
-
-                {/* Content */}
-                <div
-                    style={{
+                        width: "100%",
+                        height: "100%",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 30,
-                        zIndex: 10,
+                        backgroundColor: "#000000",
+                        position: "relative",
                     }}
                 >
-                    {/* Icon */}
+                    {/* Simplified Matrix Background (just a few subtle lines) */}
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            padding: "40px 0",
+                        }}
+                    >
+                        <div style={{ height: "1px", width: "100%", backgroundColor: colors.primary, opacity: 0.1, display: "flex" }} />
+                        <div style={{ height: "1px", width: "100%", backgroundColor: colors.primary, opacity: 0.1, display: "flex" }} />
+                        <div style={{ height: "1px", width: "100%", backgroundColor: colors.primary, opacity: 0.1, display: "flex" }} />
+                        <div style={{ height: "1px", width: "100%", backgroundColor: colors.primary, opacity: 0.1, display: "flex" }} />
+                        <div style={{ height: "1px", width: "100%", backgroundColor: colors.primary, opacity: 0.1, display: "flex" }} />
+                    </div>
+
+                    {/* Main Border */}
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: 40,
+                            left: 40,
+                            right: 40,
+                            bottom: 40,
+                            border: `1px solid ${colors.primary}`,
+                            display: "flex",
+                        }}
+                    />
+
+                    {/* Content Container */}
                     <div
                         style={{
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "center",
                             justifyContent: "center",
-                            width: 120,
-                            height: 120,
-                            borderRadius: 60,
-                            border: `3px solid ${colors.primary}`,
-                            boxShadow: `0 0 40px ${colors.glow}`,
-                            backgroundColor: "rgba(0, 0, 0, 0.8)",
+                            padding: "60px",
+                            backgroundColor: "rgba(0, 0, 0, 0.9)",
+                            border: `2px solid ${colors.primary}`,
                         }}
                     >
-                        <svg
-                            width="60"
-                            height="60"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke={colors.primary}
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                        {/* Icon Area */}
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "100px",
+                                height: "100px",
+                                borderRadius: "50px",
+                                border: `2px solid ${colors.primary}`,
+                                backgroundColor: "black",
+                                marginBottom: "30px",
+                            }}
                         >
-                            <path d={iconPath} />
-                        </svg>
+                            <svg
+                                width="50"
+                                height="50"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke={colors.primary}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ display: "flex" }}
+                            >
+                                <path d={iconPath} />
+                            </svg>
+                        </div>
+
+                        {/* Text Content */}
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    fontSize: "64px",
+                                    fontWeight: "bold",
+                                    color: "white",
+                                    textAlign: "center",
+                                    textTransform: "uppercase",
+                                    display: "flex",
+                                    marginBottom: "10px",
+                                }}
+                            >
+                                {title}
+                            </div>
+                            <div
+                                style={{
+                                    fontSize: "24px",
+                                    color: colors.primary,
+                                    textAlign: "center",
+                                    textTransform: "uppercase",
+                                    display: "flex",
+                                }}
+                            >
+                                {subtitle}
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Title */}
+                    {/* Corner Decoration */}
                     <div
                         style={{
-                            fontSize: 64,
-                            fontWeight: 800,
-                            color: "#ffffff",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                            textShadow: `0 0 20px ${colors.glow}`,
-                            textAlign: "center",
-                            maxWidth: 1000,
+                            position: "absolute",
+                            bottom: 60,
+                            right: 60,
                             display: "flex",
-                        }}
-                    >
-                        {title}
-                    </div>
-
-                    {/* Subtitle */}
-                    <div
-                        style={{
-                            fontSize: 24,
+                            fontSize: "14px",
                             color: colors.primary,
-                            fontWeight: 400,
-                            letterSpacing: "0.15em",
-                            textShadow: `0 0 10px ${colors.glow}`,
-                            display: "flex",
+                            fontWeight: "bold",
                         }}
                     >
-                        {subtitle}
+                        PCSTYLE // PROTOCOL: OG-ALPHA
                     </div>
                 </div>
-
-                {/* Watermark */}
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: 40,
-                        right: 50,
-                        fontSize: 18,
-                        fontWeight: 700,
-                        letterSpacing: "0.2em",
-                        display: "flex",
-                    }}
-                >
-                    <span style={{ color: colors.primary }}>pc</span>
-                    <span style={{ color: "#444" }}>style</span>
-                </div>
-
-                {/* Scanlines overlay */}
-                <div
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundImage: `linear-gradient(to bottom, transparent 2px, rgba(0, 0, 0, 0.15) 2px)`,
-                        backgroundSize: "100% 4px",
-                        pointerEvents: "none",
-                        display: "flex",
-                    }}
-                />
-            </div>
-        ),
-        {
-            width: 1200,
-            height: 630,
-            headers: {
-                "Cache-Control": "public, max-age=3600, s-maxage=86400",
-            },
-        }
-    );
+            ),
+            {
+                width: 1200,
+                height: 630,
+            }
+        );
+    } catch (err: any) {
+        console.error(err);
+        return new Response(`Failed to generate image: ${err.message}`, { status: 500 });
+    }
 }
