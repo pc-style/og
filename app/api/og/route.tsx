@@ -1,4 +1,4 @@
-import { ImageResponse } from "@vercel/og";
+import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
 export const runtime = "edge";
@@ -25,7 +25,7 @@ const icons: Record<string, string> = {
 };
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
 
     // Get params with defaults
     const title = searchParams.get("title") || "PCSTYLE";
@@ -68,7 +68,8 @@ export async function GET(request: NextRequest) {
                         bottom: 0,
                         opacity: 0.08,
                         display: "flex",
-                        backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 20px, ${colors.primary}33 20px, ${colors.primary}33 21px)`,
+                        backgroundImage: `linear-gradient(to bottom, ${colors.primary}33 1px, transparent 1px)`,
+                        backgroundSize: "100% 20px",
                     }}
                 />
 
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest) {
                         right: 20,
                         bottom: 20,
                         border: `2px solid ${colors.primary}`,
-                        boxShadow: `0 0 30px ${colors.glow}, inset 0 0 30px ${colors.glow}`,
+                        boxShadow: `0 0 30px ${colors.glow}`,
                         display: "flex",
                     }}
                 />
@@ -181,7 +182,8 @@ export async function GET(request: NextRequest) {
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.15) 2px, rgba(0, 0, 0, 0.15) 4px)`,
+                        backgroundImage: `linear-gradient(to bottom, transparent 2px, rgba(0, 0, 0, 0.15) 2px)`,
+                        backgroundSize: "100% 4px",
                         pointerEvents: "none",
                         display: "flex",
                     }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Image,
@@ -57,6 +57,13 @@ export default function Home() {
   const [selectedTheme, setSelectedTheme] = useState("magenta");
   const [copied, setCopied] = useState(false);
   const [key, setKey] = useState(0);
+  const [baseUrl, setBaseUrl] = useState("https://og.pcstyle.dev");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseUrl(window.location.origin);
+    }
+  }, []);
 
   const generateUrl = useCallback(() => {
     const params = new URLSearchParams({
@@ -68,7 +75,7 @@ export default function Home() {
     return `/api/og?${params.toString()}`;
   }, [title, subtitle, selectedIcon, selectedTheme]);
 
-  const fullUrl = `https://og.pcstyle.dev${generateUrl()}`;
+  const fullUrl = `${baseUrl}${generateUrl()}`;
 
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(fullUrl);
@@ -159,8 +166,8 @@ export default function Home() {
                         key={option.name}
                         onClick={() => setSelectedIcon(option.name)}
                         className={`p-3 border rounded-lg transition-all ${isSelected
-                            ? "border-[#ff00ff] bg-[#ff00ff]/10 text-[#ff00ff] shadow-[0_0_15px_#ff00ff44]"
-                            : "border-gray-800 text-gray-600 hover:border-gray-600 hover:text-gray-400"
+                          ? "border-[#ff00ff] bg-[#ff00ff]/10 text-[#ff00ff] shadow-[0_0_15px_#ff00ff44]"
+                          : "border-gray-800 text-gray-600 hover:border-gray-600 hover:text-gray-400"
                           }`}
                         title={option.label}
                       >
@@ -184,8 +191,8 @@ export default function Home() {
                         key={option.name}
                         onClick={() => setSelectedTheme(option.name)}
                         className={`flex items-center gap-3 px-4 py-3 border rounded-lg transition-all ${isSelected
-                            ? "border-current bg-opacity-10"
-                            : "border-gray-800 hover:border-gray-600"
+                          ? "border-current bg-opacity-10"
+                          : "border-gray-800 hover:border-gray-600"
                           }`}
                         style={{
                           borderColor: isSelected ? option.color : undefined,
@@ -227,8 +234,8 @@ export default function Home() {
                   <button
                     onClick={copyToClipboard}
                     className={`px-4 border rounded-lg transition-all ${copied
-                        ? "border-green-500 bg-green-500/10 text-green-400"
-                        : "border-[#ff00ff]/30 text-[#ff00ff] hover:bg-[#ff00ff]/10"
+                      ? "border-green-500 bg-green-500/10 text-green-400"
+                      : "border-[#ff00ff]/30 text-[#ff00ff] hover:bg-[#ff00ff]/10"
                       }`}
                   >
                     {copied ? (
