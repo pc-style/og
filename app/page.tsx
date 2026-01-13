@@ -3,83 +3,115 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  Image,
-  Copy,
-  Check,
-  ExternalLink,
-  RefreshCw,
-  Link,
-  Upload,
-  FileText,
-  Code,
-  Gamepad2,
-  Cpu,
-  Globe,
-  Zap,
-  Shield,
-  Clock,
-  Terminal,
-  Sparkles,
-  Monitor,
-  Box,
-  Layers,
-  Calculator,
-  Smile,
-  Search,
-  Plus,
-  Minus,
-  Heart,
-  ThumbsUp,
-  Bell,
-  Calendar,
-  Mail,
-  Phone,
-  Lock,
-  Database,
-  Server,
-  Github,
-  Twitter,
-  Facebook,
-  Instagram,
-  Youtube,
-  Activity,
-} from "lucide-react";
+  Image as ImageIcon,
+  Copy as CopyIcon,
+  Check as CheckIcon,
+  ArrowSquareOut as ArrowSquareOutIcon,
+  ArrowsClockwise as ArrowsClockwiseIcon,
+  Link as LinkIcon,
+  UploadSimple as UploadSimpleIcon,
+  FileText as FileTextIcon,
+  Code as CodeIcon,
+  GameController as GameControllerIcon,
+  Cpu as CpuIcon,
+  Globe as GlobeIcon,
+  Lightning as LightningIcon,
+  ShieldCheck as ShieldCheckIcon,
+  Clock as ClockIcon,
+  TerminalWindow as TerminalWindowIcon,
+  Monitor as MonitorIcon,
+  Sparkle as SparkleIcon,
+  Cube as CubeIcon,
+  Stack as StackIcon,
+  Calculator as CalculatorIcon,
+  Smiley as SmileyIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  Plus as PlusIcon,
+  Minus as MinusIcon,
+  Heart as HeartIcon,
+  ThumbsUp as ThumbsUpIcon,
+  Bell as BellIcon,
+  Calendar as CalendarIcon,
+  Envelope as EnvelopeIcon,
+  Phone as PhoneIcon,
+  Lock as LockIcon,
+  Database as DatabaseIcon,
+  HardDrives as HardDrivesIcon,
+  GithubLogo as GithubLogoIcon,
+  XLogo as XLogoIcon,
+  FacebookLogo as FacebookLogoIcon,
+  InstagramLogo as InstagramLogoIcon,
+  YoutubeLogo as YoutubeLogoIcon,
+  Pulse as PulseIcon,
+
+  Rocket as RocketIcon,
+  Fire as FireIcon,
+  Trophy as TrophyIcon,
+  Ghost as GhostIcon,
+  Bug as BugIcon,
+  ChatCenteredText as ChatIcon,
+  PaintBrush as PaintBrushIcon,
+  MapTrifold as MapIcon,
+  Wrench as WrenchIcon,
+  HardDrive as HardDriveIcon,
+  Folder as FolderIcon,
+  Shield as ShieldIcon,
+  Brain as BrainIcon,
+  Star as StarIcon,
+} from "@phosphor-icons/react";
+
 import { ColorPicker } from "@/components/ui/ColorPicker";
 
 const iconOptions = [
-  { name: "link", icon: Link, label: "Link" },
-  { name: "upload", icon: Upload, label: "Upload" },
-  { name: "file", icon: FileText, label: "File" },
-  { name: "code", icon: Code, label: "Code" },
-  { name: "terminal", icon: Terminal, label: "Terminal" },
-  { name: "zap", icon: Zap, label: "Zap" },
-  { name: "globe", icon: Globe, label: "Globe" },
-  { name: "cpu", icon: Cpu, label: "CPU" },
-  { name: "gamepad", icon: Gamepad2, label: "Game" },
-  { name: "shield", icon: Shield, label: "Shield" },
-  { name: "clock", icon: Clock, label: "Clock" },
-  { name: "sparkles", icon: Sparkles, label: "Sparkles" },
-  { name: "monitor", icon: Monitor, label: "Monitor" },
-  { name: "box", icon: Box, label: "Box" },
-  { name: "layers", icon: Layers, label: "Layers" },
-  { name: "calculator", icon: Calculator, label: "Calc" },
-  { name: "activity", icon: Activity, label: "Stats" },
-  { name: "search", icon: Search, label: "Search" },
-  { name: "heart", icon: Heart, label: "Heart" },
-  { name: "thumbs-up", icon: ThumbsUp, label: "Like" },
-  { name: "bell", icon: Bell, label: "Bell" },
-  { name: "calendar", icon: Calendar, label: "Events" },
-  { name: "mail", icon: Mail, label: "Mail" },
-  { name: "phone", icon: Phone, label: "Phone" },
-  { name: "lock", icon: Lock, label: "Lock" },
-  { name: "database", icon: Database, label: "DB" },
-  { name: "server", icon: Server, label: "Server" },
-  { name: "github", icon: Github, label: "Github" },
-  { name: "twitter", icon: Twitter, label: "X" },
-  { name: "facebook", icon: Facebook, label: "FB" },
-  { name: "instagram", icon: Instagram, label: "IG" },
-  { name: "youtube", icon: Youtube, label: "YT" },
+  { name: "link", icon: LinkIcon, label: "Link" },
+  { name: "upload", icon: UploadSimpleIcon, label: "Upload" },
+  { name: "file", icon: FileTextIcon, label: "File" },
+  { name: "code", icon: CodeIcon, label: "Code" },
+  { name: "terminal", icon: TerminalWindowIcon, label: "Terminal" },
+  { name: "zap", icon: LightningIcon, label: "Zap" },
+  { name: "globe", icon: GlobeIcon, label: "Globe" },
+  { name: "cpu", icon: CpuIcon, label: "CPU" },
+  { name: "gamepad", icon: GameControllerIcon, label: "Game" },
+  { name: "shield", icon: ShieldCheckIcon, label: "Shield" },
+  { name: "clock", icon: ClockIcon, label: "Clock" },
+  { name: "sparkles", icon: SparkleIcon, label: "Sparkles" },
+  { name: "monitor", icon: MonitorIcon, label: "Monitor" },
+  { name: "box", icon: CubeIcon, label: "Box" },
+  { name: "layers", icon: StackIcon, label: "Layers" },
+  { name: "calculator", icon: CalculatorIcon, label: "Calc" },
+  { name: "pulse", icon: PulseIcon, label: "Pulse" },
+
+  { name: "search", icon: MagnifyingGlassIcon, label: "Search" },
+  { name: "heart", icon: HeartIcon, label: "Heart" },
+  { name: "star", icon: StarIcon, label: "Star" },
+  { name: "rocket", icon: RocketIcon, label: "Rocket" },
+  { name: "fire", icon: FireIcon, label: "Fire" },
+  { name: "trophy", icon: TrophyIcon, label: "Trophy" },
+  { name: "ghost", icon: GhostIcon, label: "Ghost" },
+  { name: "bug", icon: BugIcon, label: "Bug" },
+  { name: "chat", icon: ChatIcon, label: "Chat" },
+  { name: "brush", icon: PaintBrushIcon, label: "Design" },
+  { name: "map", icon: MapIcon, label: "Map" },
+  { name: "wrench", icon: WrenchIcon, label: "Tools" },
+  { name: "drive", icon: HardDriveIcon, label: "Storage" },
+  { name: "folder", icon: FolderIcon, label: "Folder" },
+  { name: "brain", icon: BrainIcon, label: "AI" },
+  { name: "bell", icon: BellIcon, label: "Bell" },
+  { name: "calendar", icon: CalendarIcon, label: "Events" },
+  { name: "mail", icon: EnvelopeIcon, label: "Mail" },
+  { name: "phone", icon: PhoneIcon, label: "Phone" },
+  { name: "lock", icon: LockIcon, label: "Lock" },
+  { name: "database", icon: DatabaseIcon, label: "DB" },
+  { name: "server", icon: HardDrivesIcon, label: "Server" },
+  { name: "github", icon: GithubLogoIcon, label: "Github" },
+
+  { name: "twitter", icon: XLogoIcon, label: "X" },
+  { name: "facebook", icon: FacebookLogoIcon, label: "FB" },
+  { name: "instagram", icon: InstagramLogoIcon, label: "IG" },
+  { name: "youtube", icon: YoutubeLogoIcon, label: "YT" },
 ];
+
+
 
 const themeOptions = [
   { name: "magenta", color: "#ff00ff", label: "Magenta" },
@@ -136,7 +168,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4 group">
             <div className="w-10 h-10 bg-[#ff00ff] flex items-center justify-center text-black font-black text-xl shadow-[0_0_15px_#ff00ff66]">
-              <Image className="w-5 h-5" />
+              <ImageIcon className="w-5 h-5" weight="bold" />
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight uppercase group-hover:text-[#ff00ff] transition-colors">
@@ -207,7 +239,7 @@ export default function Home() {
                     className="w-full p-4 bg-black border border-[#ff00ff]/30 rounded-lg text-white placeholder-gray-600 outline-none focus:border-[#ff00ff] focus:shadow-[0_0_20px_#ff00ff44] transition-all"
                     placeholder="Enter emoji (e.g. 🚀)"
                   />
-                  <Smile className="absolute right-4 top-4 w-5 h-5 text-[#ff00ff]/50" />
+                  <SmileyIcon className="absolute right-4 top-4 w-5 h-5 text-[#ff00ff]/50" />
                 </div>
               </div>
 
@@ -230,7 +262,7 @@ export default function Home() {
                           }`}
                         title={option.label}
                       >
-                        <IconComponent className="w-4 h-4" />
+                        <IconComponent className="w-4 h-4" weight={isSelected ? "bold" : "regular"} />
                       </button>
                     );
                   })}
@@ -241,9 +273,9 @@ export default function Home() {
                     value={customIcon}
                     onChange={(e) => setCustomIcon(e.target.value)}
                     className="w-full p-3 bg-black border border-[#ff00ff]/20 rounded-lg text-xs text-white placeholder-gray-700 outline-none focus:border-[#ff00ff] transition-all"
-                    placeholder="Or enter Lucide icon name (e.g. 'activity')..."
+                    placeholder="Or enter Phosphor icon name (e.g. 'Activity')..."
                   />
-                  <Search className="absolute right-3 top-3 w-4 h-4 text-[#ff00ff]/30" />
+                  <MagnifyingGlassIcon className="absolute right-3 top-3 w-4 h-4 text-[#ff00ff]/30" />
                 </div>
               </div>
 
@@ -336,11 +368,12 @@ export default function Home() {
                       }`}
                   >
                     {copied ? (
-                      <Check className="w-4 h-4" />
+                      <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <Copy className="w-4 h-4" />
+                      <CopyIcon className="w-4 h-4" />
                     )}
                   </button>
+
                 </div>
               </div>
             </motion.div>
@@ -363,7 +396,7 @@ export default function Home() {
                   className="p-2 text-gray-600 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                   title="Refresh preview"
                 >
-                  <RefreshCw className="w-4 h-4" />
+                  <ArrowsClockwiseIcon className="w-4 h-4" />
                 </button>
                 <a
                   href={generateUrl()}
@@ -372,7 +405,7 @@ export default function Home() {
                   className="p-2 text-gray-600 hover:text-white hover:bg-white/10 rounded-lg transition-all"
                   title="Open in new tab"
                 >
-                  <ExternalLink className="w-4 h-4" />
+                  <ArrowSquareOutIcon className="w-4 h-4" />
                 </a>
               </div>
             </div>

@@ -1,166 +1,35 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import {
-    Link,
-    Upload,
-    File as FileIcon,
-    Code,
-    Gamepad2,
-    Cpu,
-    Globe,
-    Shield,
-    Clock,
-    Sparkles,
-    Monitor,
-    Calculator,
-    Activity,
-    AlertCircle,
-    CheckCircle,
-    Command,
-    Hash,
-    Image as ImageIcon,
-    Layout,
-    MessageSquare,
-    Music,
-    Search,
-    Settings,
-    Share2,
-    Star,
-    Tag,
-    User,
-    Video,
-    Wifi,
-    Plus,
-    Minus,
-    Heart,
-    ThumbsUp,
-    Bell,
-    Calendar,
-    Map,
-    Mail,
-    Phone,
-    Lock,
-    Unlock,
-    Key,
-    Trash,
-    Edit3,
-    CheckSquare,
-    Square,
-    Circle,
-    Triangle,
-    Sun,
-    Moon,
-    Cloud,
-    MousePointer2,
-    Keyboard,
-    Printer,
-    Database,
-    Server,
-    HardDrive,
-    Github,
-    Twitter,
-    Linkedin,
-    Facebook,
-    Instagram,
-    Youtube,
-    Twitch,
-    Dribbble,
-    Chrome,
-    Terminal as TerminalIcon,
-    Smartphone as MobileIcon,
-    Box as BoxIcon,
-    Layers as LayersIcon,
-    Zap as ZapIcon,
-    Wind,
-    Thermometer,
-    Droplets,
-    Ghost,
-    Skull,
-    Target,
-    Trophy,
-} from "lucide-react";
 
 export const runtime = "edge";
 
-// Icon mapping for safer dynamic loading
-const iconMap: Record<string, any> = {
-    link: Link,
-    upload: Upload,
-    file: FileIcon,
-    code: Code,
-    gamepad: Gamepad2,
-    cpu: Cpu,
-    globe: Globe,
-    zap: ZapIcon,
-    shield: Shield,
-    clock: Clock,
-    terminal: TerminalIcon,
-    sparkles: Sparkles,
-    monitor: Monitor,
-    box: BoxIcon,
-    layers: LayersIcon,
-    calculator: Calculator,
-    activity: Activity,
-    alert: AlertCircle,
-    check: CheckCircle,
-    command: Command,
-    hash: Hash,
-    image: ImageIcon,
-    layout: Layout,
-    message: MessageSquare,
-    music: Music,
-    search: Search,
-    settings: Settings,
-    share: Share2,
-    smartphone: MobileIcon,
-    star: Star,
-    tag: Tag,
-    user: User,
-    video: Video,
-    wifi: Wifi,
-    plus: Plus,
-    minus: Minus,
-    heart: Heart,
-    "thumbs-up": ThumbsUp,
-    bell: Bell,
-    calendar: Calendar,
-    map: Map,
-    mail: Mail,
-    phone: Phone,
-    lock: Lock,
-    unlock: Unlock,
-    key: Key,
-    trash: Trash,
-    edit: Edit3,
-    "check-square": CheckSquare,
-    square: Square,
-    circle: Circle,
-    triangle: Triangle,
-    sun: Sun,
-    moon: Moon,
-    cloud: Cloud,
-    mouse: MousePointer2,
-    keyboard: Keyboard,
-    printer: Printer,
-    database: Database,
-    server: Server,
-    "hard-drive": HardDrive,
-    github: Github,
-    twitter: Twitter,
-    linkedin: Linkedin,
-    facebook: Facebook,
-    instagram: Instagram,
-    youtube: Youtube,
-    twitch: Twitch,
-    dribbble: Dribbble,
-    chrome: Chrome,
-    wind: Wind,
-    thermometer: Thermometer,
-    droplets: Droplets,
-    ghost: Ghost,
-    skull: Skull,
-    target: Target,
-    trophy: Trophy,
+// Fallback icon path (Question icon) in case fetch fails
+const FALLBACK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><path fill="currentColor" d="M140 180a12 12 0 1 1-12-12a12 12 0 0 1 12 12M128 72c-22.06 0-40 16.15-40 36a8 8 0 0 0 16 0c0-11 10.77-20 24-20s24 9 24 20s-10.77 20-24 20a8 8 0 0 0-8 8v8a8 8 0 0 0 16 0v-1.1c16.14-3 32-17.51 32-34.9c0-19.85-17.94-36-40-36m104 56A104 104 0 1 1 128 24a104.11 104.11 0 0 1 104 104m-16 0a88 88 0 1 0-88 88a88.1 88.1 0 0 0 88-88"/></svg>`;
+
+// Mapping for legacy names or aliases to Phosphor (ph:) names
+const nameMap: Record<string, string> = {
+    zap: "lightning",
+    search: "magnifying-glass",
+    terminal: "terminal-window",
+    box: "cube",
+    layers: "stack",
+    monitor: "monitor-play",
+    mail: "envelope",
+    "thumbs-up": "thumbs-up",
+    github: "github-logo",
+    twitter: "x-logo",
+    facebook: "facebook-logo",
+    instagram: "instagram-logo",
+    youtube: "youtube-logo",
+    upload: "upload-simple",
+    shield: "shield-check",
+    sparkles: "sparkle",
+    activity: "pulse",
+    server: "hard-drives",
+    brush: "paint-brush",
+    drive: "hard-drive",
+    chat: "chat-centered-text",
+    map: "map-trifold",
 };
 
 export async function GET(request: NextRequest) {
@@ -170,7 +39,8 @@ export async function GET(request: NextRequest) {
         // Params
         const title = searchParams.get("title") || "PCSTYLE";
         const subtitle = searchParams.get("subtitle") || "pcstyle.dev";
-        const iconName = (searchParams.get("icon") || "code").toLowerCase();
+        const rawIcon = (searchParams.get("icon") || "code").toLowerCase();
+        const iconName = nameMap[rawIcon] || rawIcon;
         const theme = searchParams.get("theme") || "magenta";
         const customColor = searchParams.get("color");
         const emoji = searchParams.get("emoji");
@@ -202,11 +72,31 @@ export async function GET(request: NextRequest) {
             };
         }
 
-        // Icon Selection
-        const renderIcon = (name: string, color: string) => {
-            const IconComponent = iconMap[name] || Code;
-            return <IconComponent color={color} size={100} strokeWidth={2.5} />;
-        };
+        // --- ICON FETCHING ---
+        let iconDataUri = "";
+        if (!emoji) {
+            try {
+                // Fetch from Iconify (Phosphor library) with SWR caching
+                const iconRes = await fetch(
+                    `https://api.iconify.design/ph:${iconName}.svg?color=${encodeURIComponent(colors.primary)}`,
+                    { next: { revalidate: 3600 } }
+                );
+
+                let svg = "";
+                if (iconRes.ok) {
+                    svg = await iconRes.text();
+                } else {
+                    svg = FALLBACK_SVG.replace("currentColor", colors.primary);
+                }
+
+                const base64 = Buffer.from(svg).toString('base64');
+                iconDataUri = `data:image/svg+xml;base64,${base64}`;
+            } catch (e) {
+                console.error("Icon fetch error:", e);
+                const fallback = FALLBACK_SVG.replace("currentColor", colors.primary);
+                iconDataUri = `data:image/svg+xml;base64,${Buffer.from(fallback).toString('base64')}`;
+            }
+        }
 
         return new ImageResponse(
             (
@@ -223,7 +113,6 @@ export async function GET(request: NextRequest) {
                     }}
                 >
                     {/* --- BACKGROUND --- */}
-                    {/* Grid Pattern */}
                     <div
                         style={{
                             position: "absolute",
@@ -296,7 +185,7 @@ export async function GET(request: NextRequest) {
                                 <div style={{ width: 8, height: 8, background: colors.primary, borderRadius: '50%' }} />
                                 <span style={{ color: '#fff', letterSpacing: '2px' }}>PCSTYLE_OS</span>
                             </div>
-                            <div style={{ letterSpacing: '2px' }}>SYS.OG.GENERATOR_V2</div>
+                            <div style={{ letterSpacing: '2px' }}>SYS.OG.GENERATOR_V3_STABLE</div>
                         </div>
 
                         {/* Bottom Bar */}
@@ -347,9 +236,16 @@ export async function GET(request: NextRequest) {
                             }}
                         >
                             {emoji ? (
-                                <div style={{ fontSize: "100px" }}>{emoji}</div>
+                                <div style={{ fontSize: "100px", display: 'flex' }}>{emoji}</div>
                             ) : (
-                                renderIcon(iconName, colors.primary)
+                                <img
+                                    src={iconDataUri}
+                                    style={{
+                                        width: "120px",
+                                        height: "120px",
+                                    }}
+                                    alt=""
+                                />
                             )}
                         </div>
 
@@ -387,6 +283,9 @@ export async function GET(request: NextRequest) {
             {
                 width: 1200,
                 height: 630,
+                headers: {
+                    'Cache-Control': 'public, immutable, no-transform, max-age=31536000',
+                },
                 fonts: [
                     {
                         name: 'JetBrains Mono',
