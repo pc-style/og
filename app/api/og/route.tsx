@@ -1,40 +1,54 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import {
-    Link,
-    Upload,
-    File,
-    Code,
-    Gamepad2,
-    Cpu,
-    Globe,
-    Zap,
-    Shield,
-    Clock,
-    Terminal,
-    Sparkles,
-    Monitor,
-    Box,
-    Layers,
-    Calculator,
-    Activity,
-    AlertCircle,
-    CheckCircle,
-    Command,
-    Hash,
-    Image as ImageIcon,
-    Layout,
-    MessageSquare,
-    Music,
-    Search,
-    Settings,
-    Share2,
-    Smartphone,
-    Star,
-    Tag,
-    User,
-    Video,
-    Wifi
+    Plus,
+    Minus,
+    Heart,
+    ThumbsUp,
+    Bell,
+    Calendar,
+    Map,
+    Mail,
+    Phone,
+    Lock,
+    Unlock,
+    Key,
+    Trash,
+    Edit3,
+    CheckSquare,
+    Square,
+    Circle,
+    Triangle,
+    Sun,
+    Moon,
+    Cloud,
+    MousePointer2,
+    Keyboard,
+    Printer,
+    Database,
+    Server,
+    HardDrive,
+    Github,
+    Twitter,
+    Linkedin,
+    Facebook,
+    Instagram,
+    Youtube,
+    Twitch,
+    Dribbble,
+    Chrome,
+    Terminal as TerminalIcon,
+    Smartphone as MobileIcon,
+    Box as BoxIcon,
+    Layers as LayersIcon,
+    Zap as ZapIcon,
+    Wind,
+    Thermometer,
+    Droplets,
+    Ghost,
+    Skull,
+    Target,
+    Trophy,
 } from "lucide-react";
 
 export const runtime = "edge";
@@ -43,19 +57,19 @@ export const runtime = "edge";
 const iconMap: Record<string, any> = {
     link: Link,
     upload: Upload,
-    file: File,
+    file: FileIcon,
     code: Code,
     gamepad: Gamepad2,
     cpu: Cpu,
     globe: Globe,
-    zap: Zap,
+    zap: ZapIcon,
     shield: Shield,
     clock: Clock,
-    terminal: Terminal,
+    terminal: TerminalIcon,
     sparkles: Sparkles,
     monitor: Monitor,
-    box: Box,
-    layers: Layers,
+    box: BoxIcon,
+    layers: LayersIcon,
     calculator: Calculator,
     activity: Activity,
     alert: AlertCircle,
@@ -69,12 +83,55 @@ const iconMap: Record<string, any> = {
     search: Search,
     settings: Settings,
     share: Share2,
-    smartphone: Smartphone,
+    smartphone: MobileIcon,
     star: Star,
     tag: Tag,
     user: User,
     video: Video,
     wifi: Wifi,
+    plus: Plus,
+    minus: Minus,
+    heart: Heart,
+    "thumbs-up": ThumbsUp,
+    bell: Bell,
+    calendar: Calendar,
+    map: Map,
+    mail: Mail,
+    phone: Phone,
+    lock: Lock,
+    unlock: Unlock,
+    key: Key,
+    trash: Trash,
+    edit: Edit3,
+    "check-square": CheckSquare,
+    square: Square,
+    circle: Circle,
+    triangle: Triangle,
+    sun: Sun,
+    moon: Moon,
+    cloud: Cloud,
+    mouse: MousePointer2,
+    keyboard: Keyboard,
+    printer: Printer,
+    database: Database,
+    server: Server,
+    "hard-drive": HardDrive,
+    github: Github,
+    twitter: Twitter,
+    linkedin: Linkedin,
+    facebook: Facebook,
+    instagram: Instagram,
+    youtube: Youtube,
+    twitch: Twitch,
+    dribbble: Dribbble,
+    chrome: Chrome,
+    wind: Wind,
+    thermometer: Thermometer,
+    droplets: Droplets,
+    ghost: Ghost,
+    skull: Skull,
+    target: Target,
+    trophy: Trophy,
 };
 
 export async function GET(request: NextRequest) {
@@ -89,18 +146,21 @@ export async function GET(request: NextRequest) {
         const customColor = searchParams.get("color");
         const emoji = searchParams.get("emoji");
 
-        // Font
+        // Font - Using a .ttf version for better compatibility
         const fontData = await fetch(
-            new URL('https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnF8RD8yKx5.woff2', 'https://fonts.google.com')
-        ).then((res) => res.arrayBuffer());
+            new URL('https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf')
+        ).then((res) => {
+            if (!res.ok) throw new Error("Failed to fetch font");
+            return res.arrayBuffer();
+        });
 
         // Theme Configuration
-        const themeColors: Record<string, { primary: string; secondary: string; glow: string }> = {
-            magenta: { primary: "#ff00ff", secondary: "rgba(255, 0, 255, 0.2)", glow: "#d946ef" },
-            cyan: { primary: "#00ffff", secondary: "rgba(0, 255, 255, 0.2)", glow: "#22d3ee" },
-            roxi: { primary: "#ff1a75", secondary: "rgba(255, 26, 117, 0.2)", glow: "#be123c" },
-            emerald: { primary: "#34d399", secondary: "rgba(52, 211, 153, 0.2)", glow: "#10b981" },
-            violet: { primary: "#a78bfa", secondary: "rgba(167, 139, 250, 0.2)", glow: "#8b5cf6" },
+        const themeColors: Record<string, { primary: string; secondary: string }> = {
+            magenta: { primary: "#ff00ff", secondary: "rgba(255, 0, 255, 0.2)" },
+            cyan: { primary: "#00ffff", secondary: "rgba(0, 255, 255, 0.2)" },
+            roxi: { primary: "#ff1a75", secondary: "rgba(255, 26, 117, 0.2)" },
+            emerald: { primary: "#34d399", secondary: "rgba(52, 211, 153, 0.2)" },
+            violet: { primary: "#a78bfa", secondary: "rgba(167, 139, 250, 0.2)" },
         };
 
         let colors = themeColors[theme] || themeColors.magenta;
@@ -110,7 +170,6 @@ export async function GET(request: NextRequest) {
             colors = {
                 primary: hex,
                 secondary: `${hex}33`,
-                glow: hex
             };
         }
 
@@ -131,56 +190,43 @@ export async function GET(request: NextRequest) {
                         overflow: "hidden",
                     }}
                 >
-                    {/* --- BACKGROUND LAYERS --- */}
-                    
-                    {/* 1. Grid Pattern */}
+                    {/* --- BACKGROUND --- */}
+                    {/* Grid Pattern - Split into two layers as Satori doesn't support multiple gradients */}
                     <div
                         style={{
                             position: "absolute",
-                            inset: 0,
-                            backgroundImage: `
-                                linear-gradient(to right, #1a1a1a 1px, transparent 1px),
-                                linear-gradient(to bottom, #1a1a1a 1px, transparent 1px)
-                            `,
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: "linear-gradient(to right, #1a1a1a 1px, transparent 1px)",
+                            backgroundSize: "60px 60px",
+                            opacity: 0.4,
+                        }}
+                    />
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: "linear-gradient(to bottom, #1a1a1a 1px, transparent 1px)",
                             backgroundSize: "60px 60px",
                             opacity: 0.4,
                         }}
                     />
 
-                    {/* 2. Radial Glow (Ambient) */}
+                    {/* Ambient Glow */}
                     <div
                         style={{
                             position: "absolute",
-                            top: "-20%",
-                            left: "-20%",
-                            width: "800px",
-                            height: "800px",
+                            top: "-10%",
+                            left: "-10%",
+                            width: "600px",
+                            height: "600px",
                             background: `radial-gradient(circle, ${colors.secondary} 0%, transparent 70%)`,
-                            filter: "blur(80px)",
-                            opacity: 0.4,
-                        }}
-                    />
-                     <div
-                        style={{
-                            position: "absolute",
-                            bottom: "-20%",
-                            right: "-20%",
-                            width: "800px",
-                            height: "800px",
-                            background: `radial-gradient(circle, ${colors.secondary} 0%, transparent 70%)`,
-                            filter: "blur(80px)",
-                            opacity: 0.4,
-                        }}
-                    />
-
-                    {/* 3. Scanline Overlay (Simulated with repeating gradient) */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            inset: 0,
-                            background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 51%)",
-                            backgroundSize: "100% 4px",
-                            pointerEvents: "none",
+                            opacity: 0.3,
                         }}
                     />
 
@@ -188,26 +234,29 @@ export async function GET(request: NextRequest) {
                     <div
                         style={{
                             position: "absolute",
-                            inset: "30px",
+                            top: "30px",
+                            left: "30px",
+                            right: "30px",
+                            bottom: "30px",
                             border: `1px solid #333`,
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-between",
                         }}
                     >
-                         {/* Corner Accents */}
+                        {/* Corner Accents */}
                         <div style={{ position: 'absolute', top: -1, left: -1, width: 20, height: 20, borderTop: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
                         <div style={{ position: 'absolute', top: -1, right: -1, width: 20, height: 20, borderTop: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
                         <div style={{ position: 'absolute', bottom: -1, left: -1, width: 20, height: 20, borderBottom: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
                         <div style={{ position: 'absolute', bottom: -1, right: -1, width: 20, height: 20, borderBottom: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
 
                         {/* Top Bar */}
-                        <div style={{ 
-                            display: 'flex', 
-                            justifyContent: 'space-between', 
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
                             padding: '16px 24px',
                             borderBottom: '1px solid #222',
-                            background: 'rgba(0,0,0,0.4)',
+                            background: 'rgba(0,0,0,0.6)',
                             fontSize: '14px',
                             color: '#666'
                         }}>
@@ -219,24 +268,23 @@ export async function GET(request: NextRequest) {
                         </div>
 
                         {/* Bottom Bar */}
-                         <div style={{ 
-                            display: 'flex', 
-                            justifyContent: 'space-between', 
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
                             padding: '16px 24px',
                             borderTop: '1px solid #222',
-                            background: 'rgba(0,0,0,0.4)',
+                            background: 'rgba(0,0,0,0.6)',
                             fontSize: '14px',
-                            color: '#666',
-                            fontFamily: '"JetBrains Mono"'
+                            color: '#666'
                         }}>
-                             <div style={{ display: 'flex', gap: '20px' }}>
-                                 <span>X: 1024</span>
-                                 <span>Y: 0768</span>
-                                 <span>Z: 0000</span>
-                             </div>
-                             <div style={{ color: colors.primary }}>
-                                 STATUS: OPTIMAL
-                             </div>
+                            <div style={{ display: 'flex', gap: '20px' }}>
+                                <span>X: 1024</span>
+                                <span>Y: 0768</span>
+                                <span>Z: 0000</span>
+                            </div>
+                            <div style={{ color: colors.primary }}>
+                                STATUS: OPTIMAL
+                            </div>
                         </div>
                     </div>
 
@@ -260,30 +308,21 @@ export async function GET(request: NextRequest) {
                                 justifyContent: "center",
                                 width: "200px",
                                 height: "200px",
-                                background: "rgba(0,0,0,0.6)",
-                                border: `1px solid ${colors.secondary}`,
-                                borderRadius: "30px", // Squircle
-                                boxShadow: `0 0 50px ${colors.secondary}`,
+                                background: "rgba(0,0,0,0.8)",
+                                border: `2px solid ${colors.primary}`,
+                                borderRadius: "30px",
                                 position: "relative",
                             }}
                         >
-                            {/* Inner glow ring */}
-                             <div style={{
-                                position: 'absolute',
-                                inset: -2,
-                                borderRadius: "32px",
-                                border: `2px solid ${colors.primary}`,
-                                opacity: 0.3,
-                                filter: 'blur(4px)'
-                            }} />
-                            
-                             {emoji ? (
+                            {emoji ? (
                                 <div style={{ fontSize: "100px" }}>{emoji}</div>
                             ) : (
                                 <Icon
-                                    color={colors.primary}
-                                    size={100}
-                                    strokeWidth={1.5}
+                                    stroke={colors.primary}
+                                    fill="none"
+                                    width={100}
+                                    height={100}
+                                    strokeWidth={2}
                                 />
                             )}
                         </div>
@@ -297,16 +336,13 @@ export async function GET(request: NextRequest) {
                                     color: "white",
                                     lineHeight: 0.95,
                                     letterSpacing: "-3px",
-                                    textShadow: `0 0 40px ${colors.secondary}`,
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
                                 }}
                             >
                                 {title}
                             </div>
-                            
+
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{ height: '2px', width: '40px', background: colors.primary }} />
+                                <div style={{ height: '3px', width: '40px', background: colors.primary }} />
                                 <div
                                     style={{
                                         fontSize: "32px",
@@ -330,6 +366,7 @@ export async function GET(request: NextRequest) {
                         name: 'JetBrains Mono',
                         data: fontData,
                         style: 'normal',
+                        weight: 700,
                     },
                 ],
             }
