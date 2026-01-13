@@ -203,7 +203,10 @@ export async function GET(request: NextRequest) {
         }
 
         // Icon Selection
-        const Icon = iconMap[iconName] || Code;
+        const renderIcon = (name: string, color: string) => {
+            const IconComponent = iconMap[name] || Code;
+            return <IconComponent color={color} size={100} strokeWidth={2.5} />;
+        };
 
         return new ImageResponse(
             (
@@ -220,7 +223,7 @@ export async function GET(request: NextRequest) {
                     }}
                 >
                     {/* --- BACKGROUND --- */}
-                    {/* Grid Pattern - Split into two layers as Satori doesn't support multiple gradients */}
+                    {/* Grid Pattern */}
                     <div
                         style={{
                             position: "absolute",
@@ -230,7 +233,7 @@ export async function GET(request: NextRequest) {
                             bottom: 0,
                             backgroundImage: "linear-gradient(to right, #1a1a1a 1px, transparent 1px)",
                             backgroundSize: "60px 60px",
-                            opacity: 0.4,
+                            opacity: 0.3,
                         }}
                     />
                     <div
@@ -242,7 +245,7 @@ export async function GET(request: NextRequest) {
                             bottom: 0,
                             backgroundImage: "linear-gradient(to bottom, #1a1a1a 1px, transparent 1px)",
                             backgroundSize: "60px 60px",
-                            opacity: 0.4,
+                            opacity: 0.3,
                         }}
                     />
 
@@ -250,12 +253,12 @@ export async function GET(request: NextRequest) {
                     <div
                         style={{
                             position: "absolute",
-                            top: "-10%",
-                            left: "-10%",
-                            width: "600px",
-                            height: "600px",
+                            top: "-15%",
+                            left: "-15%",
+                            width: "800px",
+                            height: "800px",
                             background: `radial-gradient(circle, ${colors.secondary} 0%, transparent 70%)`,
-                            opacity: 0.3,
+                            opacity: 0.4,
                         }}
                     />
 
@@ -285,13 +288,13 @@ export async function GET(request: NextRequest) {
                             justifyContent: 'space-between',
                             padding: '16px 24px',
                             borderBottom: '1px solid #222',
-                            background: 'rgba(0,0,0,0.6)',
+                            background: 'rgba(0,0,0,0.7)',
                             fontSize: '14px',
                             color: '#666'
                         }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <div style={{ width: 8, height: 8, background: colors.primary, borderRadius: '50%' }} />
-                                <span style={{ color: '#fff', letterSpacing: '1px' }}>PCSTYLE_OS</span>
+                                <span style={{ color: '#fff', letterSpacing: '2px' }}>PCSTYLE_OS</span>
                             </div>
                             <div style={{ letterSpacing: '2px' }}>SYS.OG.GENERATOR_V2</div>
                         </div>
@@ -302,16 +305,16 @@ export async function GET(request: NextRequest) {
                             justifyContent: 'space-between',
                             padding: '16px 24px',
                             borderTop: '1px solid #222',
-                            background: 'rgba(0,0,0,0.6)',
+                            background: 'rgba(0,0,0,0.7)',
                             fontSize: '14px',
                             color: '#666'
                         }}>
-                            <div style={{ display: 'flex', gap: '20px' }}>
-                                <span>X: 1024</span>
-                                <span>Y: 0768</span>
+                            <div style={{ display: 'flex', gap: '24px' }}>
+                                <span>X: 1200</span>
+                                <span>Y: 0630</span>
                                 <span>Z: 0000</span>
                             </div>
-                            <div style={{ color: colors.primary }}>
+                            <div style={{ color: colors.primary, letterSpacing: '1px' }}>
                                 STATUS: OPTIMAL
                             </div>
                         </div>
@@ -325,7 +328,7 @@ export async function GET(request: NextRequest) {
                             alignItems: "center",
                             justifyContent: "center",
                             gap: "60px",
-                            padding: "0 80px",
+                            padding: "60px 100px",
                             zIndex: 10,
                         }}
                     >
@@ -335,32 +338,26 @@ export async function GET(request: NextRequest) {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: "200px",
-                                height: "200px",
+                                width: "220px",
+                                height: "220px",
                                 background: "rgba(0,0,0,0.8)",
                                 border: `2px solid ${colors.primary}`,
-                                borderRadius: "30px",
+                                borderRadius: "40px",
                                 position: "relative",
                             }}
                         >
                             {emoji ? (
                                 <div style={{ fontSize: "100px" }}>{emoji}</div>
                             ) : (
-                                <Icon
-                                    stroke={colors.primary}
-                                    fill="none"
-                                    width={100}
-                                    height={100}
-                                    strokeWidth={2}
-                                />
+                                renderIcon(iconName, colors.primary)
                             )}
                         </div>
 
                         {/* Text Container (Right) */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '650px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '700px' }}>
                             <div
                                 style={{
-                                    fontSize: "80px",
+                                    fontSize: "84px",
                                     fontWeight: 900,
                                     color: "white",
                                     lineHeight: 0.95,
@@ -370,12 +367,12 @@ export async function GET(request: NextRequest) {
                                 {title}
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{ height: '3px', width: '40px', background: colors.primary }} />
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <div style={{ height: '4px', width: '50px', background: colors.primary }} />
                                 <div
                                     style={{
-                                        fontSize: "32px",
-                                        color: "#ccc",
+                                        fontSize: "36px",
+                                        color: "#999",
                                         letterSpacing: "1px",
                                     }}
                                 >
