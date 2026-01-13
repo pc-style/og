@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
             violet: { primary: "#a78bfa", secondary: "rgba(167, 139, 250, 0.2)" },
         };
 
+        // yheah
         let colors = themeColors[theme] || themeColors.magenta;
 
         if (theme === "custom" && customColor) {
