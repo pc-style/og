@@ -30,7 +30,21 @@ const nameMap: Record<string, string> = {
     drive: "hard-drive",
     chat: "chat-centered-text",
     map: "map-trifold",
+    star: "star",
+    bell: "bell",
+    calendar: "calendar",
+    lock: "lock",
+    database: "database",
+    brain: "brain",
+    folder: "folder",
+    wrench: "wrench",
+    rocket: "rocket",
+    fire: "fire",
+    trophy: "trophy",
+    ghost: "ghost",
+    bug: "bug",
 };
+
 
 export async function GET(request: NextRequest) {
     try {
@@ -185,8 +199,9 @@ export async function GET(request: NextRequest) {
                                 <div style={{ width: 8, height: 8, background: colors.primary, borderRadius: '50%' }} />
                                 <span style={{ color: '#fff', letterSpacing: '2px' }}>PCSTYLE_OS</span>
                             </div>
-                            <div style={{ letterSpacing: '2px' }}>SYS.OG.GENERATOR_V3_STABLE</div>
+                            <div style={{ letterSpacing: '2px' }}>SYS.IMAGE_ENGINE.V3_STABLE</div>
                         </div>
+
 
                         {/* Bottom Bar */}
                         <div style={{
@@ -218,9 +233,9 @@ export async function GET(request: NextRequest) {
                             justifyContent: "center",
                             gap: "60px",
                             padding: "60px 100px",
-                            zIndex: 10,
                         }}
                     >
+
                         {/* Icon Container (Left) */}
                         <div
                             style={{
