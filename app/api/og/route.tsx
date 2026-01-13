@@ -1,32 +1,106 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import * as LucideIcons from "lucide-react";
+import {
+    Link,
+    Upload,
+    File,
+    Code,
+    Gamepad2,
+    Cpu,
+    Globe,
+    Zap,
+    Shield,
+    Clock,
+    Terminal,
+    Sparkles,
+    Monitor,
+    Box,
+    Layers,
+    Calculator,
+    Activity,
+    AlertCircle,
+    CheckCircle,
+    Command,
+    Hash,
+    Image as ImageIcon,
+    Layout,
+    MessageSquare,
+    Music,
+    Search,
+    Settings,
+    Share2,
+    Smartphone,
+    Star,
+    Tag,
+    User,
+    Video,
+    Wifi
+} from "lucide-react";
 
-// Using Node.js runtime as it's often more stable for ImageResponse in newer Next.js versions
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+// Icon mapping for safer dynamic loading
+const iconMap: Record<string, any> = {
+    link: Link,
+    upload: Upload,
+    file: File,
+    code: Code,
+    gamepad: Gamepad2,
+    cpu: Cpu,
+    globe: Globe,
+    zap: Zap,
+    shield: Shield,
+    clock: Clock,
+    terminal: Terminal,
+    sparkles: Sparkles,
+    monitor: Monitor,
+    box: Box,
+    layers: Layers,
+    calculator: Calculator,
+    activity: Activity,
+    alert: AlertCircle,
+    check: CheckCircle,
+    command: Command,
+    hash: Hash,
+    image: ImageIcon,
+    layout: Layout,
+    message: MessageSquare,
+    music: Music,
+    search: Search,
+    settings: Settings,
+    share: Share2,
+    smartphone: Smartphone,
+    star: Star,
+    tag: Tag,
+    user: User,
+    video: Video,
+    wifi: Wifi,
+};
 
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
 
-        // Get params with defaults
+        // Params
         const title = searchParams.get("title") || "PCSTYLE";
         const subtitle = searchParams.get("subtitle") || "pcstyle.dev";
-        const iconName = searchParams.get("icon") || "Code";
+        const iconName = (searchParams.get("icon") || "code").toLowerCase();
         const theme = searchParams.get("theme") || "magenta";
         const customColor = searchParams.get("color");
         const emoji = searchParams.get("emoji");
 
-        // Load JetBrains Mono font
+        // Font
         const fontData = await fetch(
             new URL('https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnF8RD8yKx5.woff2', 'https://fonts.google.com')
         ).then((res) => res.arrayBuffer());
 
-        // Theme colors
-        const themeColors: Record<string, { primary: string; secondary: string; accent: string }> = {
-            magenta: { primary: "#ff00ff", secondary: "rgba(255, 0, 255, 0.15)", accent: "#d946ef" },
-            cyan: { primary: "#00ffff", secondary: "rgba(0, 255, 255, 0.15)", accent: "#22d3ee" },
-            roxi: { primary: "#ff1a75", secondary: "rgba(255, 26, 117, 0.15)", accent: "#be123c" },
+        // Theme Configuration
+        const themeColors: Record<string, { primary: string; secondary: string; glow: string }> = {
+            magenta: { primary: "#ff00ff", secondary: "rgba(255, 0, 255, 0.2)", glow: "#d946ef" },
+            cyan: { primary: "#00ffff", secondary: "rgba(0, 255, 255, 0.2)", glow: "#22d3ee" },
+            roxi: { primary: "#ff1a75", secondary: "rgba(255, 26, 117, 0.2)", glow: "#be123c" },
+            emerald: { primary: "#34d399", secondary: "rgba(52, 211, 153, 0.2)", glow: "#10b981" },
+            violet: { primary: "#a78bfa", secondary: "rgba(167, 139, 250, 0.2)", glow: "#8b5cf6" },
         };
 
         let colors = themeColors[theme] || themeColors.magenta;
@@ -35,15 +109,13 @@ export async function GET(request: NextRequest) {
             const hex = customColor.startsWith('#') ? customColor : `#${customColor}`;
             colors = {
                 primary: hex,
-                secondary: `${hex}26`, // ~15% opacity
-                accent: hex
+                secondary: `${hex}33`,
+                glow: hex
             };
         }
 
-        // Get Icon Component
-        const pascalIconName = iconName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
-        // @ts-ignore
-        const Icon = LucideIcons[pascalIconName] || LucideIcons[iconName] || LucideIcons.Code;
+        // Icon Selection
+        const Icon = iconMap[iconName] || Code;
 
         return new ImageResponse(
             (
@@ -53,156 +125,201 @@ export async function GET(request: NextRequest) {
                         height: "100%",
                         display: "flex",
                         flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#030303",
+                        backgroundColor: "#050505",
                         fontFamily: '"JetBrains Mono"',
                         position: "relative",
                         overflow: "hidden",
                     }}
                 >
-                    {/* Background Grid */}
+                    {/* --- BACKGROUND LAYERS --- */}
+                    
+                    {/* 1. Grid Pattern */}
                     <div
                         style={{
                             position: "absolute",
                             inset: 0,
-                            backgroundImage: `linear-gradient(to right, #111 1px, transparent 1px), linear-gradient(to bottom, #111 1px, transparent 1px)`,
-                            backgroundSize: "40px 40px",
-                            maskImage: "radial-gradient(circle at center, black 40%, transparent 100%)",
-                            opacity: 0.5,
+                            backgroundImage: `
+                                linear-gradient(to right, #1a1a1a 1px, transparent 1px),
+                                linear-gradient(to bottom, #1a1a1a 1px, transparent 1px)
+                            `,
+                            backgroundSize: "60px 60px",
+                            opacity: 0.4,
                         }}
                     />
 
-                    {/* Radial Glow */}
+                    {/* 2. Radial Glow (Ambient) */}
                     <div
                         style={{
                             position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
+                            top: "-20%",
+                            left: "-20%",
                             width: "800px",
                             height: "800px",
                             background: `radial-gradient(circle, ${colors.secondary} 0%, transparent 70%)`,
-                            filter: "blur(40px)",
-                            opacity: 0.6,
+                            filter: "blur(80px)",
+                            opacity: 0.4,
+                        }}
+                    />
+                     <div
+                        style={{
+                            position: "absolute",
+                            bottom: "-20%",
+                            right: "-20%",
+                            width: "800px",
+                            height: "800px",
+                            background: `radial-gradient(circle, ${colors.secondary} 0%, transparent 70%)`,
+                            filter: "blur(80px)",
+                            opacity: 0.4,
                         }}
                     />
 
-                    {/* Cybernetic Frame */}
+                    {/* 3. Scanline Overlay (Simulated with repeating gradient) */}
                     <div
                         style={{
                             position: "absolute",
-                            top: 40,
-                            left: 40,
-                            right: 40,
-                            bottom: 40,
-                            border: `1px solid ${colors.primary}`,
+                            inset: 0,
+                            background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 51%)",
+                            backgroundSize: "100% 4px",
+                            pointerEvents: "none",
+                        }}
+                    />
+
+                    {/* --- UI FRAME --- */}
+                    <div
+                        style={{
+                            position: "absolute",
+                            inset: "30px",
+                            border: `1px solid #333`,
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "space-between",
-                            boxShadow: `0 0 15px ${colors.secondary}, inset 0 0 15px ${colors.secondary}`,
                         }}
                     >
-                         {/* Top Decoration */}
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "10px" }}>
-                             <div style={{ width: "20px", height: "20px", borderTop: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
-                             <div style={{ display: "flex", gap: "8px" }}>
-                                <div style={{ width: "40px", height: "4px", background: colors.primary }} />
-                                <div style={{ width: "8px", height: "4px", background: colors.primary, opacity: 0.5 }} />
-                                <div style={{ width: "4px", height: "4px", background: colors.primary, opacity: 0.3 }} />
-                             </div>
-                             <div style={{ width: "20px", height: "20px", borderTop: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
+                         {/* Corner Accents */}
+                        <div style={{ position: 'absolute', top: -1, left: -1, width: 20, height: 20, borderTop: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
+                        <div style={{ position: 'absolute', top: -1, right: -1, width: 20, height: 20, borderTop: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
+                        <div style={{ position: 'absolute', bottom: -1, left: -1, width: 20, height: 20, borderBottom: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
+                        <div style={{ position: 'absolute', bottom: -1, right: -1, width: 20, height: 20, borderBottom: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
+
+                        {/* Top Bar */}
+                        <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            padding: '16px 24px',
+                            borderBottom: '1px solid #222',
+                            background: 'rgba(0,0,0,0.4)',
+                            fontSize: '14px',
+                            color: '#666'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div style={{ width: 8, height: 8, background: colors.primary, borderRadius: '50%' }} />
+                                <span style={{ color: '#fff', letterSpacing: '1px' }}>PCSTYLE_OS</span>
+                            </div>
+                            <div style={{ letterSpacing: '2px' }}>SYS.OG.GENERATOR_V2</div>
                         </div>
 
-                        {/* Bottom Decoration */}
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", padding: "10px" }}>
-                             <div style={{ width: "20px", height: "20px", borderBottom: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
-                             <div style={{ fontSize: "16px", color: colors.primary, letterSpacing: "2px", fontWeight: 700 }}>
-                                 PROTOCOL: OG_V2 // <span style={{ opacity: 0.6 }}>SYSTEM_READY</span>
+                        {/* Bottom Bar */}
+                         <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            padding: '16px 24px',
+                            borderTop: '1px solid #222',
+                            background: 'rgba(0,0,0,0.4)',
+                            fontSize: '14px',
+                            color: '#666',
+                            fontFamily: '"JetBrains Mono"'
+                        }}>
+                             <div style={{ display: 'flex', gap: '20px' }}>
+                                 <span>X: 1024</span>
+                                 <span>Y: 0768</span>
+                                 <span>Z: 0000</span>
                              </div>
-                             <div style={{ width: "20px", height: "20px", borderBottom: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
+                             <div style={{ color: colors.primary }}>
+                                 STATUS: OPTIMAL
+                             </div>
                         </div>
                     </div>
 
-                    {/* Main Content Card */}
+                    {/* --- CONTENT CENTER --- */}
                     <div
                         style={{
+                            flex: 1,
                             display: "flex",
-                            flexDirection: "row", // Horizontal layout for better balance
                             alignItems: "center",
-                            gap: "40px",
-                            padding: "60px 80px",
-                            background: "rgba(0, 0, 0, 0.6)",
-                            border: `1px solid ${colors.secondary}`,
-                            backdropFilter: "blur(10px)",
-                            borderRadius: "4px",
+                            justifyContent: "center",
+                            gap: "60px",
+                            padding: "0 80px",
                             zIndex: 10,
                         }}
                     >
-                        {/* Icon Box */}
+                        {/* Icon Container (Left) */}
                         <div
                             style={{
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: "160px",
-                                height: "160px",
-                                background: `linear-gradient(135deg, ${colors.secondary} 0%, rgba(0,0,0,0) 100%)`,
-                                border: `1px solid ${colors.primary}`,
-                                borderRadius: "20px",
-                                boxShadow: `0 0 30px ${colors.secondary}`,
+                                width: "200px",
+                                height: "200px",
+                                background: "rgba(0,0,0,0.6)",
+                                border: `1px solid ${colors.secondary}`,
+                                borderRadius: "30px", // Squircle
+                                boxShadow: `0 0 50px ${colors.secondary}`,
                                 position: "relative",
                             }}
                         >
-                            <div style={{ position: "absolute", top: -1, left: -1, width: "10px", height: "10px", borderTop: `2px solid ${colors.primary}`, borderLeft: `2px solid ${colors.primary}` }} />
-                            <div style={{ position: "absolute", bottom: -1, right: -1, width: "10px", height: "10px", borderBottom: `2px solid ${colors.primary}`, borderRight: `2px solid ${colors.primary}` }} />
+                            {/* Inner glow ring */}
+                             <div style={{
+                                position: 'absolute',
+                                inset: -2,
+                                borderRadius: "32px",
+                                border: `2px solid ${colors.primary}`,
+                                opacity: 0.3,
+                                filter: 'blur(4px)'
+                            }} />
                             
-                            {emoji ? (
-                                <div style={{ fontSize: "80px" }}>{emoji}</div>
+                             {emoji ? (
+                                <div style={{ fontSize: "100px" }}>{emoji}</div>
                             ) : (
                                 <Icon
                                     color={colors.primary}
-                                    size={80}
+                                    size={100}
                                     strokeWidth={1.5}
                                 />
                             )}
                         </div>
 
-                        {/* Text Content */}
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "flex-start",
-                                maxWidth: "600px",
-                            }}
-                        >
+                        {/* Text Container (Right) */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '650px' }}>
                             <div
                                 style={{
-                                    fontSize: "72px",
-                                    fontWeight: 800,
+                                    fontSize: "80px",
+                                    fontWeight: 900,
                                     color: "white",
-                                    lineHeight: 1,
-                                    letterSpacing: "-2px",
-                                    marginBottom: "16px",
-                                    textShadow: `0 0 10px ${colors.secondary}`,
-                                    whiteSpace: "pre-wrap", 
+                                    lineHeight: 0.95,
+                                    letterSpacing: "-3px",
+                                    textShadow: `0 0 40px ${colors.secondary}`,
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
                                 }}
                             >
                                 {title}
                             </div>
-                            <div
-                                style={{
-                                    fontSize: "28px",
-                                    color: "#a1a1aa", // Zinc-400 equivalent
-                                    fontWeight: 400,
-                                    lineHeight: 1.4,
-                                }}
-                            >
-                                {subtitle}
+                            
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{ height: '2px', width: '40px', background: colors.primary }} />
+                                <div
+                                    style={{
+                                        fontSize: "32px",
+                                        color: "#ccc",
+                                        letterSpacing: "1px",
+                                    }}
+                                >
+                                    {subtitle}
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             ),
             {
